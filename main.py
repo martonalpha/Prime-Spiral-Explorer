@@ -1233,17 +1233,18 @@ html = f"""<!DOCTYPE html>
     }}
     .page {{
       width: min(1400px, calc(100vw - 32px));
-      height: min(78vh, 920px);
-      min-height: 760px;
-      padding: 0;
+      padding: 12px;
       box-sizing: border-box;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       margin: 0 auto 24px;
       border: 1px solid #1e1e30;
       border-radius: 20px;
       background: #090910;
       box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }}
     .controls {{
       display: flex;
@@ -1251,16 +1252,14 @@ html = f"""<!DOCTYPE html>
       gap: 16px;
       align-items: center;
       justify-content: center;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
       padding: 10px 12px 8px;
       box-sizing: border-box;
       background: rgba(13, 13, 20, 0.92);
       backdrop-filter: blur(10px);
-      z-index: 9999;
+      z-index: 3;
       pointer-events: auto;
+      border: 1px solid #1e1e30;
+      border-radius: 16px;
     }}
     .control-group {{
       display: flex;
@@ -1312,13 +1311,13 @@ html = f"""<!DOCTYPE html>
       font-weight: 700;
     }}
     #plot-shell {{
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 0;
+      position: relative;
       min-height: 0;
       z-index: 1;
+      border: 1px solid #141420;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #0b0b13;
     }}
     #prime-plot {{
       width: 100%;
@@ -1335,10 +1334,6 @@ html = f"""<!DOCTYPE html>
       height: 100% !important;
     }}
     #ulam-analytics {{
-      position: absolute;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
       display: none;
       gap: 12px;
       grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
@@ -1358,10 +1353,6 @@ html = f"""<!DOCTYPE html>
       }}
     }}
     #validation-analytics {{
-      position: absolute;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
       display: none;
       gap: 12px;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1477,6 +1468,7 @@ html = f"""<!DOCTYPE html>
   <script>
     const figure = {figure_json};
     const plotConfig = {plot_config_json};
+    const pageDiv = document.querySelector(".page");
     const plotDiv = document.getElementById("prime-plot");
     const plotShell = document.getElementById("plot-shell");
     const controlsDiv = document.getElementById("controls");
@@ -1540,28 +1532,37 @@ html = f"""<!DOCTYPE html>
 
     function analyticsHeight() {{
       const mode = analyticsMode();
+      const pageWidth = pageDiv.getBoundingClientRect().width;
+      const compact = pageWidth < 1100;
       if (mode === "none") {{
         return 0;
       }}
       if (mode === "validation") {{
-        if (window.innerWidth < 1100) {{
-          return Math.min(760, Math.max(520, Math.floor(window.innerHeight * 0.60)));
+        if (compact) {{
+          return 900;
         }}
-        return Math.min(560, Math.max(380, Math.floor(window.innerHeight * 0.46)));
+        return 430;
       }}
-      if (window.innerWidth < 1100) {{
-        return Math.min(420, Math.max(320, Math.floor(window.innerHeight * 0.42)));
+      if (compact) {{
+        return 520;
       }}
-      return Math.min(320, Math.max(240, Math.floor(window.innerHeight * 0.30)));
+      return 280;
+    }}
+
+    function targetPlotHeight() {{
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 900;
+      if (currentView === "validation") {{
+        return Math.min(640, Math.max(420, Math.floor(viewportHeight * 0.42)));
+      }}
+      if (currentView === "ulam") {{
+        return Math.min(720, Math.max(460, Math.floor(viewportHeight * 0.50)));
+      }}
+      return Math.min(820, Math.max(520, Math.floor(viewportHeight * 0.62)));
     }}
 
     function syncLayoutBounds() {{
-      const controlsHeight = controlsDiv.getBoundingClientRect().height;
       const analyticsSpace = analyticsHeight();
-      const gap = analyticsSpace > 0 ? 12 : 0;
-      const plotHeight = Math.max(420, window.innerHeight - controlsHeight - analyticsSpace - gap);
-      plotShell.style.top = `${{controlsHeight}}px`;
-      plotShell.style.bottom = "auto";
+      const plotHeight = targetPlotHeight();
       plotShell.style.height = `${{plotHeight}}px`;
       ulamAnalyticsDiv.style.display = ulamAnalyticsEnabled() ? "grid" : "none";
       validationAnalyticsDiv.style.display = validationAnalyticsEnabled() ? "grid" : "none";
