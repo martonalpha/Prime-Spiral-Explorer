@@ -1,6 +1,6 @@
 # Prime Spiral Explorer
 
-Prime Spiral Explorer is an interactive number-theory visualization project focused on **prime numbers** and **semiprimes**. It combines multiple geometric mappings, analytics views, and a publishable static frontend so the result can be explored locally or shared as a public portfolio project through GitHub Pages.
+Prime Spiral Explorer is an interactive **prime number visualization** and number-theory exploration project focused on **prime numbers** and **semiprimes**. It combines multiple geometric mappings, analytics views, and a publishable static frontend so the result can be explored locally or shared as a public portfolio project through GitHub Pages.
 
 ## Preview
 
@@ -92,10 +92,11 @@ GitHub Pages will publish `docs/index.html` as the public entry point.
 ## SEO and portfolio presentation
 
 - The project publishes as a **static site**, which makes it easy to host, cache, version, and index.
-- The generated page already includes a descriptive `<title>`, meta description, robots directives, Open Graph metadata, and JSON-LD `WebPage` structured data.
+- The generated page already includes a descriptive `<title>`, meta description, canonical URL, robots directives, Open Graph metadata, a social preview image, sitemap output, and JSON-LD `WebPage` structured data.
 - The landing page contains readable explanatory copy above and below the visualization, so search engines and human visitors get context instead of only a JavaScript-heavy chart.
 - The output lives in `docs/`, which is a clean GitHub Pages convention and keeps the public artifact separate from the source code.
 - Individual interactive states can be referenced through URL parameters such as `?view=ulam` or `?view=validation`, which makes portfolio sharing and deep-linking more useful.
+- The copy naturally targets phrases such as **prime number visualization**, **Ulam spiral visualization**, **semiprime visualization**, and **number theory visualization** without turning the page into keyword spam.
 - As a public portfolio piece, the project demonstrates mathematical exploration, data visualization, frontend state handling, static deployment, and technical presentation in one repository.
 
 ## Project structure

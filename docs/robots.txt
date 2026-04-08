@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://martonalpha.github.io/Prime-Spiral-Explorer/sitemap.xml

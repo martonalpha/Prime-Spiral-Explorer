@@ -18,6 +18,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
 from pathlib import Path
 import json
+import shutil
 import webbrowser
 
 # ─────────────────────────────────────────────
@@ -1168,29 +1169,38 @@ filter_configs_json = json.dumps(filter_configs)
 ulam_density_json = json.dumps(ulam_density_payload, separators=(",", ":"))
 validation_analytics_json = json.dumps(validation_analytics_payload, separators=(",", ":"))
 validation_render_json = json.dumps(validation_render_payload, separators=(",", ":"))
+public_site_url = "https://martonalpha.github.io/Prime-Spiral-Explorer/"
+preview_image_url = f"{public_site_url}og-preview.png"
 
 html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prime Spiral Explorer | Interactive 3D Prime Visualization</title>
-  <meta name="description" content="Explore prime numbers and semiprimes across helix, Ulam, spherical, cluster, and analytical views in a self-contained 3D visualization.">
+  <title>Prime Spiral Explorer | Interactive Prime Number Visualization</title>
+  <meta name="description" content="Interactive prime number visualization with helix, Ulam spiral, Fibonacci sphere, cluster, modulo, and semiprime analysis views.">
+  <meta name="keywords" content="prime number visualization, Ulam spiral visualization, semiprime visualization, number theory visualization, 3D prime spiral">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#0d0d14">
+  <link rel="canonical" href="{public_site_url}">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="{public_site_url}">
   <meta property="og:title" content="Prime Spiral Explorer">
-  <meta property="og:description" content="Interactive 3D prime number and semiprime visualization with multiple mathematical views and validation analytics.">
+  <meta property="og:description" content="Interactive prime number visualization and semiprime analysis across helix, Ulam spiral, spherical, cluster, modulo, and validation views.">
+  <meta property="og:image" content="{preview_image_url}">
   <meta property="og:image:alt" content="Prime Spiral Explorer interactive visualization">
   <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="{public_site_url}">
   <meta name="twitter:title" content="Prime Spiral Explorer">
-  <meta name="twitter:description" content="Interactive 3D visualization of prime and semiprime structure across multiple spatial mappings.">
+  <meta name="twitter:description" content="Interactive prime number visualization with Ulam spiral, helix, modulo, clustering, and semiprime analysis views.">
+  <meta name="twitter:image" content="{preview_image_url}">
   <script type="application/ld+json">
     {{
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "Prime Spiral Explorer",
-      "description": "Interactive 3D visualization of prime and semiprime structure across helix, Ulam, spherical, clustering, and validation views.",
+      "url": "{public_site_url}",
+      "description": "Interactive prime number visualization and semiprime analysis across helix, Ulam spiral, spherical, clustering, modulo, and validation views.",
       "about": ["Prime numbers", "Semiprimes", "Ulam spiral", "Number theory", "Data visualization"]
     }}
   </script>
@@ -1396,7 +1406,7 @@ html = f"""<!DOCTYPE html>
     <p class="eyebrow">Public math and data visualization project</p>
     <h1>Prime Spiral Explorer</h1>
     <p>
-      An interactive 3D study of <strong>prime numbers</strong> and <strong>semiprimes</strong> across helix, Ulam-inspired, spherical, clustering, modulo, and validation views.
+      An interactive <strong>prime number visualization</strong> project for exploring <strong>prime numbers</strong> and <strong>semiprimes</strong> across helix, Ulam spiral, spherical, clustering, modulo, and validation views.
       This page is designed as a self-contained showcase that works directly from GitHub Pages without a backend.
     </p>
   </header>
@@ -2156,7 +2166,25 @@ html = f"""<!DOCTYPE html>
 output_file.parent.mkdir(parents=True, exist_ok=True)
 output_file.write_text(html, encoding="utf-8")
 (output_file.parent / ".nojekyll").write_text("", encoding="utf-8")
-(output_file.parent / "robots.txt").write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
+(output_file.parent / "robots.txt").write_text(
+    f"User-agent: *\nAllow: /\nSitemap: {public_site_url}sitemap.xml\n",
+    encoding="utf-8",
+)
+(output_file.parent / "sitemap.xml").write_text(
+    f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{public_site_url}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>
+""",
+    encoding="utf-8",
+)
+preview_image_source = Path(__file__).parent / "assets" / "readme" / "helix-preview.png"
+if preview_image_source.exists():
+    shutil.copyfile(preview_image_source, output_file.parent / "og-preview.png")
 webbrowser.open(output_file.resolve().as_uri())
 print(f"  - Saved to: {output_file.name}")
 
