@@ -1,6 +1,9 @@
 .venv/
 .vscode/
 __pycache__/
+.mplconfig/
 *.pyc
 prime_spiral_3d_*.html
-
+assets/chrome-profile*/
+assets/edge-profile*/
+assets/*.Path/

@@ -1503,6 +1503,64 @@ html = f"""<!DOCTYPE html>
     let moduloTimer = null;
     let moduloNumbers = [];
     let renderChain = Promise.resolve();
+    const searchParams = new URLSearchParams(window.location.search);
+
+    function applyInitialStateFromUrl() {{
+      const requestedView = searchParams.get("view");
+      if (requestedView && Object.prototype.hasOwnProperty.call(viewConfigs, requestedView)) {{
+        currentView = requestedView;
+      }}
+
+      const requestedFilter = searchParams.get("filter");
+      if (requestedFilter && Object.prototype.hasOwnProperty.call(filterConfigs, requestedFilter)) {{
+        currentFilter = requestedFilter;
+      }}
+
+      const requestedValidationMode = searchParams.get("validation");
+      if (requestedValidationMode && ["downsample", "weighting", "residual"].includes(requestedValidationMode)) {{
+        currentValidationMode = requestedValidationMode;
+      }}
+
+      const requestedWeightChannel = searchParams.get("weight");
+      if (requestedWeightChannel && ["opacity", "size"].includes(requestedWeightChannel)) {{
+        currentWeightChannel = requestedWeightChannel;
+      }}
+
+      const requestedModulo = Number(searchParams.get("modulo"));
+      if (Number.isFinite(requestedModulo) && requestedModulo >= 2 && requestedModulo <= 36) {{
+        currentModulo = Math.round(requestedModulo);
+      }}
+      moduloValue.textContent = currentModulo;
+      moduloInput.value = String(currentModulo);
+    }}
+
+    function syncUrlState() {{
+      try {{
+        const nextParams = new URLSearchParams();
+        if (currentView !== "helix") {{
+          nextParams.set("view", currentView);
+        }}
+        if (currentFilter !== "both") {{
+          nextParams.set("filter", currentFilter);
+        }}
+        if (currentView === "modulo" && currentModulo !== {modulo_default_k}) {{
+          nextParams.set("modulo", String(currentModulo));
+        }}
+        if (currentView === "validation") {{
+          if (currentValidationMode !== "downsample") {{
+            nextParams.set("validation", currentValidationMode);
+          }}
+          if (currentWeightChannel !== "opacity") {{
+            nextParams.set("weight", currentWeightChannel);
+          }}
+        }}
+        const nextQuery = nextParams.toString();
+        const nextUrl = `${{window.location.pathname}}${{nextQuery ? `?${{nextQuery}}` : ""}}${{window.location.hash}}`;
+        window.history.replaceState(null, "", nextUrl);
+      }} catch (_error) {{
+        // Ignore URL sync failures in restricted file:// contexts.
+      }}
+    }}
 
     function ulamAnalyticsEnabled() {{
       return currentView === "ulam";
@@ -2032,6 +2090,7 @@ html = f"""<!DOCTYPE html>
     }}
 
     function applyState() {{
+      syncUrlState();
       setActiveButtons();
       renderChain = renderChain
         .catch(() => null)
@@ -2086,6 +2145,7 @@ html = f"""<!DOCTYPE html>
     Plotly.newPlot(plotDiv, figure.data, figure.layout, plotConfig).then(() => {{
       const moduloTraceIndex = viewConfigs.modulo.trace_indices[0];
       moduloNumbers = (baseData[moduloTraceIndex].customdata || []).map((row) => Number(row[0]));
+      applyInitialStateFromUrl();
       applyState();
       window.addEventListener("resize", resizePlot);
     }});
