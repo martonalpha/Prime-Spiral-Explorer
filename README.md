@@ -18,12 +18,6 @@ This view projects the sequence into a spiral-like radial structure. Prime and s
 
 ![Helix projection preview](assets/readme/helix-preview.png)
 
-### Ulam-style grid
-
-This projection places values on a square spiral inspired by the classical Ulam spiral. It helps reveal diagonal alignments and local density differences much more clearly.
-
-![Ulam grid preview](assets/readme/ulam-preview.png)
-
 ### Fibonacci sphere mapping
 
 This view spreads values across a sphere using golden-angle spacing. It is useful for spotting how prime and semiprime distributions behave when projected onto a compact 3D surface.
