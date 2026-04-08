@@ -2,6 +2,14 @@
 
 Prime Spiral Explorer is an interactive **prime number visualization** and number-theory exploration project focused on **prime numbers** and **semiprimes**. It combines multiple geometric mappings, analytics views, and a publishable static frontend so the result can be explored locally or shared as a public portfolio project through GitHub Pages.
 
+The core motivation behind the project is visual exploration: to understand whether primes and semiprimes exhibit different spatial behavior when embedded into 3D structures such as the Ulam tower, helix projections, and related layouts. Instead of treating primes only as an abstract sequence on the number line, the project asks whether geometric representation can make structural differences easier to see.
+
+## Research note
+
+A longer research-style note based on the original project motivation is available here:
+
+- [Research note: Spatial separation of primes and semiprimes in the three-dimensional Ulam spiral](docs/research-note.md)
+
 ## Preview
 
 ### Helix projection
