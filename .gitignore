@@ -1,0 +1,6 @@
+.venv/
+.vscode/
+__pycache__/
+*.pyc
+prime_spiral_3d_*.html
+
